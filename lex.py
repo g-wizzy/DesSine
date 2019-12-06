@@ -1,5 +1,6 @@
 import ply.lex as lex
 
+# TODO: For report, tell why we set <= as 1 lexem and not 
 reserved_words = (
     'while',
     'for',
@@ -27,23 +28,26 @@ tokens = (
     'SEMICOLON',
     'IDENTIFIER',
     'EQUAL',
-    'COMPARATOR'
+    'COMPARATOR',
+    'INIT_PREFIX'
 ) + tuple(map(lambda s: s.upper(), reserved_words))
 
 t_ADD_OP = r"[+-]"
 t_MUL_OP = r"[*/]"
-t_MOD_OP = r"[%]"
+t_MOD_OP = r"%"
 
-t_PARENTHESIS_OPEN = r"[(]"
-t_PARENTHESIS_CLOSE = r"[)]"
+t_PARENTHESIS_OPEN = r"("
+t_PARENTHESIS_CLOSE = r")"
 
-t_BRACKET_OPEN = r"[{]"
-t_BRACKET_CLOSE = r"[}]"
+t_BRACKET_OPEN = r"{"
+t_BRACKET_CLOSE = r"}"
 
-t_SEMICOLON = r"[;]"
+t_SEMICOLON = r";"
 
-t_EQUAL = r"[=]"
+t_EQUAL = r"="
 t_COMPARATOR = r"[!=]=|[><]=?"
+
+t_INIT_PREFIX = r"#"
 
 def t_IDENTIFIER(t):
     r"[A-Za-z_][\w_]*"

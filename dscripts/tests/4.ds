@@ -1,0 +1,8 @@
+#height(200)
+#width(200)
+
+gray = 0xA0A0A0
+log(gray)
+
+// Draw
+draw()

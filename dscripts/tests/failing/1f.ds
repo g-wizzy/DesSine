@@ -1,0 +1,5 @@
+// Code before init
+log(1)
+
+#height(100)
+#width(100)

@@ -1,0 +1,11 @@
+#height(200)
+#width(200)
+
+gray = 0xA0A0A0
+log(gray)
+
+// Function with args + draw
+draw()
+scale(5.0)
+rotate(2.0)
+draw()

@@ -1,0 +1,33 @@
+#height(200)
+#width(200)
+
+value = 10
+
+// Comparisons
+if(value > 5) {
+    log(11)
+}
+
+if(value < 5) {
+    log(-10)
+}
+
+if(value <= 5) {
+    log(20)
+}
+
+if(value >= 5) {
+    log(21)
+}
+
+if(value == 5) {
+    log(30)
+}
+
+if(value != 5) {
+    log(31)
+}
+
+if(value == 10) {
+    log(41)
+}

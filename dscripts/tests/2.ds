@@ -1,0 +1,7 @@
+// Even before things
+#height(200)
+#width(200)
+
+// I am a comment
+gray = 1
+log(gray)

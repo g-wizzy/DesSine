@@ -7,6 +7,7 @@ operations = {
     '-': lambda x, y: x-y,
     '*': lambda x, y: x*y,
     '/': lambda x, y: x/y,
+    '%': lambda x, y: x%y,
 }
 
 comparators = {
@@ -50,11 +51,6 @@ def execute(self):
     vars[self.children[0].tok] = self.children[1].execute()
 
 
-@addToClass(AST.PrintNode)
-def execute(self):
-    print(self.children[0].execute())
-
-
 @addToClass(AST.WhileNode)
 def execute(self):
     while self.children[0].execute() != 0:
@@ -62,7 +58,7 @@ def execute(self):
 
 
 if __name__ == "__main__":
-    from parser4 import parse
+    from parser import parse
     import sys
     prog = open(sys.argv[1]).read()
     ast = parse(prog)

@@ -1,0 +1,11 @@
+#width(200)
+#height(120)
+
+i = 0
+while(i < 10) {
+    draw()
+    i = i + 1
+
+    rotate(5)
+    move()
+}

@@ -62,10 +62,6 @@ class Node:
 class ProgramNode(Node):
     type = 'Program'
 
-    def __init__(self, initNode, children):
-        Node.__init__(self, children)
-        self.initNode = initNode
-
 
 class BodyNode(Node):
     type = 'Body'
@@ -92,6 +88,9 @@ class InitNode(Node):
     def __init__(self, action, children):
         Node.__init__(self, children)
         self.action = action
+    
+    def __repr__(self):
+        return self.action
 
 
 class TokenNode(Node):
@@ -141,7 +140,7 @@ class FunctionNode(Node):
     def __init__(self, action, arguments):
         Node.__init__(self, arguments)
         self.action = action
-    
+
     def __repr__(self):
         return self.action
 

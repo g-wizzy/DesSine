@@ -10,8 +10,7 @@ for(i = 0; i < 360; i = i + 1) {
     
     if(i > 180) {
         setColor(gray)
-    }
-    else {
+    } else {
         setColor(black)
     }
 

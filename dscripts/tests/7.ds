@@ -6,14 +6,12 @@ value = 10
 // Comparisons + else
 if(value > 5) {
     log(1.0)
-}
-else {
+} else {
     log(0.1)
 }
 
 if(value < 5) {
     log(0.2)
-}
-else {
+} else {
     log(1.1)
 }

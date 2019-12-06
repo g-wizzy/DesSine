@@ -3,6 +3,8 @@
 
 value = 10
 
+log(PI)
+
 // Comparisons
 if(value > 5) {
     log(11)

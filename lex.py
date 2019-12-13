@@ -57,6 +57,7 @@ builtin_actions = ("draw",
                    "rotate",
                    "scale",
                    "setColor",
+                   "setLineWidth",
                    "log")
 
 builtin_functions = ("sin",)

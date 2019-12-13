@@ -91,6 +91,8 @@ def method_log(arr):
 def method_sin(arr):
     return sin(arr[0])
 
+def method_set_line_width(arr):
+    globals["lineWidth"] = arr[0]
 
 methods = {
     'width': method_width,
@@ -103,6 +105,7 @@ methods = {
     'setColor': method_set_color,
     'log': method_log,
     'sin': method_sin,
+    'setLineWidth': method_set_line_width,
 }
 
 constants = {

@@ -38,7 +38,7 @@ globals = {
 
 def to_hex_color(color):
     try:
-        return "#" + hex(color)[2:].ljust(6, '0')
+        return "#" + hex(int(color))[2:].ljust(6, '0')
     except:
         return color
 

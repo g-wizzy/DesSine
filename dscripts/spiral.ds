@@ -1,23 +1,22 @@
 // Initial size
 
-#width(480)
-#height(360)
+#width(1000)
+#height(1000)
 
 // Can define variables using hexadecimal
-gray = 0x202020
-black = 0x000000
+color = 0x000000
 
-for(i = 0; i < 360; i = i + 0.01) {
+for(i = 0; i < 180; i = i + 0.001) {
     draw()
     move()
     
-    if(i > 180) {
-        setColor(gray)
-        log(1)
-    } else {
-        setColor(black)
+    color = color + 0x010101
+    if (color > 0xffffff) {
+        color = 0
     }
+    setColor(color)
 
-    rotate(i * PI / 180)
-    scale(1.001)
+
+    rotate(PI / 180)
+    scale(1.00005)
 }

@@ -37,7 +37,7 @@ globals = {
 
 def current_color():
     try:
-        return hex(globals["color"])
+        return "#" + hex(globals["color"])[2:].ljust(6, '0')
     except:
         return globals["color"]
 
@@ -75,7 +75,7 @@ def method_scale(arr):
 
 
 def method_set_color(arr):
-    globals["colors"] = arr[0]
+    globals["color"] = arr[0]
 
 
 def method_log(arr):
@@ -183,9 +183,8 @@ def execute(self):
 def execute(self):
     if self.children[0].execute():
         self.children[1].execute()
-    else:
-        if self.children[2]:
-            self.children[2].execute()
+    elif len(self.children) > 2:
+        self.children[2].execute()
 
 
 @addToClass(AST.ForNode)

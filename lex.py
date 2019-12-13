@@ -50,7 +50,7 @@ t_COMPARATOR = r"[!=]=|[><]=?"
 
 t_INIT_PREFIX = r"\#"
 
-init_functions = ("width", "height")
+init_functions = ("width", "height", "background")
 
 builtin_actions = ("draw",
                    "move",
@@ -104,6 +104,7 @@ def t_COMMENT(t):
     r"//.*\n+"
     t.lexer.lineno += 1
     pass
+
 
 t_ignore = " \t"
 

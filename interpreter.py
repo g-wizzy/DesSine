@@ -28,18 +28,18 @@ globals = {
     "width": None,
     "height": None,
     "color": "black",
-    "lineWidth": 1,
+    "lineWidth": 2,
     "position": (0, 0),
     "vector": (1, 0),
     "canvas": None
 }
 
 
-def current_color():
+def to_hex_color(color):
     try:
-        return "#" + hex(globals["color"])[2:].ljust(6, '0')
+        return "#" + hex(color)[2:].ljust(6, '0')
     except:
-        return globals["color"]
+        return color
 
 
 def method_width(arr):
@@ -50,16 +50,22 @@ def method_height(arr):
     globals["height"] = arr[0]
 
 
+def method_background(arr):
+    globals["background"] = arr[0]
+
+
 def method_draw(arr):
     x, y = globals["position"]
     dx, dy = globals["vector"]
     # TODO: draw circles at endpoints to avoid jagged angles
-    globals["canvas"].create_line(x, y, x+dx, y+dy, fill=current_color(), width=globals["lineWidth"])
+    globals["canvas"].create_line(
+        x, y, x+dx, y+dy, fill=to_hex_color(globals["color"]), width=globals["lineWidth"])
     globals["canvas"].pack()
 
 
 def method_move(arr):
-    globals["position"] = tuple([globals["position"][i] + globals["vector"][i] for i in [0,1]])
+    globals["position"] = tuple(
+        [globals["position"][i] + globals["vector"][i] for i in [0, 1]])
 
 
 def method_rotate(arr):
@@ -89,6 +95,7 @@ def method_sin(arr):
 methods = {
     'width': method_width,
     'height': method_height,
+    'background': method_background,
     'draw': method_draw,
     'move': method_move,
     'rotate': method_rotate,
@@ -121,12 +128,16 @@ def execute(self):
         c.execute()
 
     master = tk.Tk()
-    
-    globals["canvas"] = tk.Canvas(
-        master, width=globals["width"], height=globals["height"])
-    master.geometry(f"{globals['width']}x{globals['height']}")
-    globals["position"] = (globals["width"] / 2, globals["height"] / 2)
 
+    w = globals["width"]
+    h = globals["height"]
+
+    globals["canvas"] = tk.Canvas(master, width=w, height=h)
+
+    master.geometry(f"{w}x{h}")
+    globals["canvas"].config(bg=to_hex_color(globals["background"]))
+    
+    globals["position"] = (w / 2, h / 2)
 
 
 @addToClass(AST.TokenNode)

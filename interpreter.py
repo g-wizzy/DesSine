@@ -25,10 +25,11 @@ comparators = {
 
 vars = {}
 globals = {
-    "width": None,
-    "height": None,
+    "width": 480,
+    "height": 360,
+    "background": "white",
     "color": "black",
-    "lineWidth": 2,
+    "lineWidth": 1,
     "position": (0, 0),
     "vector": (1, 0),
     "canvas": None

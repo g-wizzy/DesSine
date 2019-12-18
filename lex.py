@@ -81,7 +81,7 @@ def t_IDENTIFIER(t):
 
 
 def t_HEX_NUMBER(t):
-    r"0x[0-9A-Fa-f]{6}"
+    r"0x[0-9A-Fa-f]+"
     t.value = int(t.value, 16)
     return t
 

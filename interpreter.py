@@ -58,9 +58,16 @@ def method_background(arr):
 def method_draw(arr):
     x, y = globals["position"]
     dx, dy = globals["vector"]
-    # TODO: draw circles at endpoints to avoid jagged angles
-    globals["canvas"].create_line(
-        x, y, x+dx, y+dy, fill=to_hex_color(globals["color"]), width=globals["lineWidth"])
+    lw = globals["lineWidth"]
+    color = to_hex_color(globals["color"])
+    globals["canvas"].create_line(x, y, x+dx, y+dy, fill=color, width=lw)
+
+    # Draw circles at endpoints to avoid disjointed segments
+    globals["canvas"].create_oval(
+        x - lw / 2, y - lw / 2, x + lw / 2, y + lw / 2, fill=color, width=0)
+    # globals["canvas"].create_oval(
+    #     x + dx - lw / 2, y + dy - lw / 2, lw, lw, fill=color, width=0)
+
     globals["canvas"].pack()
 
 
@@ -92,8 +99,10 @@ def method_log(arr):
 def method_sin(arr):
     return sin(arr[0])
 
+
 def method_set_line_width(arr):
     globals["lineWidth"] = arr[0]
+
 
 methods = {
     'width': method_width,
@@ -140,7 +149,7 @@ def execute(self):
 
     master.geometry(f"{w}x{h}")
     globals["canvas"].config(bg=to_hex_color(globals["background"]))
-    
+
     globals["position"] = (w / 2, h / 2)
 
 

@@ -217,7 +217,7 @@ def execute(self):
 @addToClass(AST.FunctionNode)
 def execute(self):
     args = [c.execute() for c in self.children]
-    methods[self.action](args)
+    return methods[self.action](args)
 
 
 if __name__ == "__main__":

@@ -34,10 +34,12 @@ globals = {
     "canvas": None
 }
 
+jsLines = []
+
 
 def to_hex_color(color):
     try:
-        return "#" + hex(color)[2:].ljust(6, '0')
+        return "#" + hex(int(color))[2:].ljust(6, '0')
     except:
         return color
 
@@ -62,10 +64,14 @@ def method_draw(arr):
         x, y, x+dx, y+dy, fill=to_hex_color(globals["color"]), width=globals["lineWidth"])
     globals["canvas"].pack()
 
+    jsLines.append(f"l({x + dx}, {y + dy})")
+    jsLines.append(f"m({x}, {y})")
+
 
 def method_move(arr):
     globals["position"] = tuple(
         [globals["position"][i] + globals["vector"][i] for i in [0, 1]])
+    # jsLines.append(f"ctx.moveTo({globals['vector'][0]}, {globals['vector'][1]})")
 
 
 def method_rotate(arr):
@@ -82,6 +88,12 @@ def method_scale(arr):
 
 def method_set_color(arr):
     globals["color"] = arr[0]
+    x, y = globals["position"]
+    dx, dy = globals["vector"]
+    jsLines.append(f"x.strokeStyle = \"{to_hex_color(globals['color'])}\"")
+    jsLines.append(f"x.stroke()")
+    jsLines.append(f"x.beginPath()")
+    jsLines.append(f"m({x}, {y})")
 
 
 def method_log(arr):
@@ -91,8 +103,10 @@ def method_log(arr):
 def method_sin(arr):
     return sin(arr[0])
 
+
 def method_set_line_width(arr):
     globals["lineWidth"] = arr[0]
+
 
 methods = {
     'width': method_width,
@@ -139,7 +153,7 @@ def execute(self):
 
     master.geometry(f"{w}x{h}")
     globals["canvas"].config(bg=to_hex_color(globals["background"]))
-    
+
     globals["position"] = (w / 2, h / 2)
 
 
@@ -216,7 +230,7 @@ def execute(self):
 @addToClass(AST.FunctionNode)
 def execute(self):
     args = [c.execute() for c in self.children]
-    methods[self.action](args)
+    return methods[self.action](args)
 
 
 if __name__ == "__main__":
@@ -232,5 +246,12 @@ if __name__ == "__main__":
     ast.init()
     ast.execute()
 
+    with open('drawing.js', 'w') as f:
+        f.write("function renderLines(x, canvas) {\n")
+        for item in jsLines:
+            f.write("%s\n" % item)
+        f.write("\n}")
+
     # Display the result
     tk.mainloop()
+

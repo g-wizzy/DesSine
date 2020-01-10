@@ -1,7 +1,16 @@
 import pydot
 
+###########################################
+# DesSine AST
+# Made by Pierre Bürki and Loïck Jeanneret
+# Last updated on 10.01.20
+###########################################
+
 
 class Node:
+    """
+    Same as the file used in all the course's exercises
+    """
     count = 0
     type = 'Node (unspecified)'
     shape = 'ellipse'
@@ -60,18 +69,45 @@ class Node:
 
 
 class ProgramNode(Node):
+    """
+    Root of the syntaxic tree.
+    Has two children : the init block and the body
+    """
     type = 'Program'
 
 
 class BodyNode(Node):
+    """
+    Node whose children are a succession of statements
+    """
     type = 'Body'
 
 
 class InitBlockNode(Node):
+    """
+    Block whose children are a succession of InitNode, it must exist once at the start of the program
+    """
     type = 'InitBlock'
 
 
+class InitNode(Node):
+    """
+    Child of the InitBlockNode. Each one comprises of a call to an init function.
+    """
+    type = "Init"
+
+    def __init__(self, action, children):
+        Node.__init__(self, children)
+        self.action = action
+
+    def __repr__(self):
+        return self.action
+
+
 class ComparisonNode(Node):
+    """
+    Node that will yields true / false when evaluated
+    """
     type = 'Comparison'
 
     def __init__(self, operator, children):
@@ -80,17 +116,6 @@ class ComparisonNode(Node):
 
     def __repr__(self):
         return self.operator
-
-
-class InitNode(Node):
-    type = "Init"
-
-    def __init__(self, action, children):
-        Node.__init__(self, children)
-        self.action = action
-    
-    def __repr__(self):
-        return self.action
 
 
 class TokenNode(Node):
@@ -131,11 +156,11 @@ class WhileNode(Node):
 
 
 class ForNode(Node):
-    type = 'For'
+    type = 'for'
 
 
 class FunctionNode(Node):
-    type = 'Action'
+    type = 'Function'
 
     def __init__(self, action, arguments):
         Node.__init__(self, arguments)
@@ -153,7 +178,13 @@ class EntryNode(Node):
 
 
 def addToClass(cls):
-    ''' Add decorated function to class. Dirty POO polyfill for python. Decorated method is still saved in the initial namespace'''
+    '''
+    Copied from the decorator used in the course's exercises
+
+    Add decorated function to class.
+    Dirty POO polyfill for python.
+    Decorated method is still saved in the initial namespace
+    '''
     def decorator(func):
         setattr(cls, func.__name__, func)
         return func

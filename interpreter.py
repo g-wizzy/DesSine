@@ -6,7 +6,13 @@ from math import pi, sin, cos
 
 import tkinter as tk
 
-operations = {
+###########################################
+# DesSine interpreter
+# Made by Pierre Bürki and Loïck Jeanneret
+# Last updated on 10.01.20
+###########################################
+
+operators = {
     '+': lambda x, y: x + y,
     '-': lambda x, y: x - y,
     '*': lambda x, y: x * y,
@@ -20,7 +26,7 @@ comparators = {
     '>=': lambda x, y: x >= y,
     '<=': lambda x, y: x <= y,
     '==': lambda x, y: x == y,
-    '!=': lambda x, y: x != y
+    '!=': lambda x, y: x != y,
 }
 
 vars = {}
@@ -32,9 +38,9 @@ globals = {
     "lineWidth": 1,
     "position": (0, 0),
     "vector": (1, 0),
-    "canvas": None
+    "canvas": None,
+    "line_count": 0,
 }
-
 
 def to_hex_color(color):
     try:
@@ -68,6 +74,7 @@ def method_draw(arr):
     # globals["canvas"].create_oval(
     #     x + dx - lw / 2, y + dy - lw / 2, lw, lw, fill=color, width=0)
 
+    globals["line_count"] += 1
     globals["canvas"].pack()
 
 
@@ -171,7 +178,7 @@ def execute(self):
     args = [c.execute() for c in self.children]
     if len(args) == 1:
         args.insert(0, 0)
-    return reduce(operations[self.op], args)
+    return reduce(operators[self.op], args)
 
 
 @addToClass(AST.ComparisonNode)
@@ -230,17 +237,15 @@ def execute(self):
 
 
 if __name__ == "__main__":
-    from parser import parse
-    import sys
+    from dessine_parser import parse
+    import sys, logger
     prog = open(sys.argv[1]).read()
     ast = parse(prog)
 
-    # program instruction example
-    # globals["canvas"].create_rectangle(50, 25, 150, 75, fill="blue")
-
-    # Call init block & body block
     ast.init()
     ast.execute()
 
     # Display the result
+    logger.info("DesSine", f"Starting render of {globals['line_count']} lines.")
+
     tk.mainloop()

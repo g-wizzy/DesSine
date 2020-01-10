@@ -9,4 +9,22 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 def error(prefix, line, message):
+    """
+    Prints the message with specific format for error
+
+    Args:
+        prefix: Will prefix the log entry
+        line: Info about the line where the error occured
+        message: Message to display
+    """
     print(f"{bcolors.FAIL}[{prefix}] {bcolors.ENDC}{bcolors.BOLD}Line {line}{bcolors.ENDC} : {message}")
+
+def info(prefix, message):
+    """
+    Prints the message with specific format for information
+
+    Args:
+        prefix: Will prefix the log entry
+        message: Message to display
+    """
+    print(f"{bcolors.OKGREEN}[{prefix}] {bcolors.ENDC}{message}")

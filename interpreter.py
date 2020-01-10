@@ -5,6 +5,7 @@ from functools import reduce
 from math import pi, sin, cos
 
 import tkinter as tk
+import sys
 
 ###########################################
 # DesSine interpreter
@@ -30,9 +31,11 @@ comparators = {
 }
 
 vars = {}
+default_width = 480
+default_height = 360
 globals = {
-    "width": 480,
-    "height": 360,
+    "width": 0,
+    "height": 0,
     "background": "white",
     "color": "black",
     "lineWidth": 1,
@@ -41,6 +44,11 @@ globals = {
     "canvas": None,
     "line_count": 0,
 }
+
+def check_init_block():
+    if globals["width"] * globals["height"] == 0:
+        logger.error("Semantic error", "0", "Missing dimension initialization")
+        sys.exit(-1)
 
 def to_hex_color(color):
     try:
@@ -238,11 +246,12 @@ def execute(self):
 
 if __name__ == "__main__":
     from dessine_parser import parse
-    import sys, logger
+    import logger
     prog = open(sys.argv[1]).read()
     ast = parse(prog)
 
     ast.init()
+    check_init_block()
     ast.execute()
 
     # Display the result

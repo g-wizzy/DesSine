@@ -1,0 +1,11 @@
+#width(200)
+#height(200)
+
+scale(10)
+
+for(i = 0; i < 360; i = i + 1) {
+    draw()
+
+    rotate(2 * PI / 360)
+    scale(1.01)
+}

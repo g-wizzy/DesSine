@@ -1,0 +1,6 @@
+// dimensions must be positive
+
+#width(-5)
+#height(0)
+
+log(0)

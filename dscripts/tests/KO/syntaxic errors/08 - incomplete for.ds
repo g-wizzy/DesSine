@@ -1,0 +1,6 @@
+#width(50)
+#height(50)
+
+for(i = 0; i < 10) {
+    log(i)
+}

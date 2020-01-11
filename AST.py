@@ -1,13 +1,24 @@
 import pydot
 
+###########################################
+# DesSine AST
+# Made by Pierre Bürki and Loïck Jeanneret
+# Last updated on 11.01.20
+###########################################
+
 
 class Node:
+    """
+    Same as the file used in all the course's exercises,
+    with the added field of the line number
+    """
     count = 0
     type = 'Node (unspecified)'
     shape = 'ellipse'
 
-    def __init__(self, children=None):
+    def __init__(self, lineno, children=None):
         self.ID = str(Node.count)
+        self.lineno = lineno
 
         Node.count += 1
 
@@ -60,44 +71,86 @@ class Node:
 
 
 class ProgramNode(Node):
+    """
+    Root of the syntaxic tree.
+    Has two children : the init block and the body
+    """
     type = 'Program'
 
 
 class BodyNode(Node):
+    """
+    Node whose children are a succession of statements
+    """
     type = 'Body'
 
+class BlockNode(Node):
+    """
+    Node representing a body surrounded by brackets, changes scope
+    """
+    type = 'Block'
 
 class InitBlockNode(Node):
+    """
+    Block whose children are a succession of InitNode, it must exist once at the start of the program
+    """
     type = 'InitBlock'
 
 
+class InitNode(Node):
+    """
+    Child of the InitBlockNode. Each one comprises of a call to an init function.
+    """
+    type = "Init"
+
+    def __init__(self, lineno, action, children):
+        Node.__init__(self, lineno, children)
+        self.action = action
+
+    def __repr__(self):
+        return self.action
+
+
+class RoutineDefinitionNode(Node):
+    type = 'Routine Definition'
+
+    def __init__(self, lineno, name, params, block):
+        Node.__init__(self, lineno)
+        self.name = name
+        self.params = list(map(lambda tokenNode: tokenNode.tok, params))
+        self.block = block
+    
+    def __repr__(self):
+        return f"{self.name}({self.params})"
+
+
+class RoutineCallNode(Node):
+    type = 'Routine Call'
+
+    def __init__(self, lineno, name, params):
+        Node.__init__(self, lineno, params)
+        self.name = name
+
+
 class ComparisonNode(Node):
+    """
+    Node that will yields true / false when evaluated
+    """
     type = 'Comparison'
 
-    def __init__(self, operator, children):
-        Node.__init__(self, children)
+    def __init__(self, lineno, operator, children):
+        Node.__init__(self, lineno, children)
         self.operator = operator
 
     def __repr__(self):
         return self.operator
 
 
-class InitNode(Node):
-    type = "Init"
-
-    def __init__(self, action, children):
-        Node.__init__(self, children)
-        self.action = action
-    
-    def __repr__(self):
-        return self.action
-
-
 class TokenNode(Node):
     type = 'token'
 
-    def __init__(self, tok):
-        Node.__init__(self)
+    def __init__(self, lineno, tok):
+        Node.__init__(self, lineno)
         self.tok = tok
         self.assign = False
 
@@ -106,8 +159,8 @@ class TokenNode(Node):
 
 
 class OpNode(Node):
-    def __init__(self, op, children):
-        Node.__init__(self, children)
+    def __init__(self, lineno, op, children):
+        Node.__init__(self, lineno, children)
         self.op = op
         try:
             self.nbargs = len(children)
@@ -131,14 +184,14 @@ class WhileNode(Node):
 
 
 class ForNode(Node):
-    type = 'For'
+    type = 'for'
 
 
 class FunctionNode(Node):
-    type = 'Action'
+    type = 'Function'
 
-    def __init__(self, action, arguments):
-        Node.__init__(self, arguments)
+    def __init__(self, lineno, action, arguments):
+        Node.__init__(self, lineno, arguments)
         self.action = action
 
     def __repr__(self):
@@ -148,12 +201,18 @@ class FunctionNode(Node):
 class EntryNode(Node):
     type = 'ENTRY'
 
-    def __init__(self):
-        Node.__init__(self, None)
+    def __init__(self, lineno):
+        Node.__init__(self, lineno, None)
 
 
 def addToClass(cls):
-    ''' Add decorated function to class. Dirty POO polyfill for python. Decorated method is still saved in the initial namespace'''
+    '''
+    Copied from the decorator used in the course's exercises
+
+    Add decorated function to class.
+    Dirty POO polyfill for python.
+    Decorated method is still saved in the initial namespace
+    '''
     def decorator(func):
         setattr(cls, func.__name__, func)
         return func

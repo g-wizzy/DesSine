@@ -1,0 +1,7 @@
+#width(200)
+#height(200)
+
+scale(75)
+setLineWidth(20)
+setColor(0xFF0000)
+draw()

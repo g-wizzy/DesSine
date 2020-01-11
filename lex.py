@@ -1,36 +1,48 @@
 import ply.lex as lex
+import sys
+import logger
 
-# TODO: For report, tell why we set <= as 1 lexem and not
+###########################################
+# DesSine lexer
+# Made by Pierre Bürki and Loïck Jeanneret
+# Last updated on 11.01.20
+###########################################
+
 reserved_words = (
     'while',
     'for',
     'if',
-    'else'
+    'else',
+    'function',
 )
 
 tokens = (
-    'INIT_PREFIX',
-    'SEMICOLON',
-    'COMMA',
+    # Operators
     'ADD_OP',
     'MUL_OP',
     'MOD_OP',
     'EQUAL',
+    'COMPARATOR',
+    # Delimiters
+    'INIT_PREFIX',
+    #'COMMENT',
+    'SEMICOLON',
+    'COMMA',
     'PARENTHESIS_OPEN',
     'PARENTHESIS_CLOSE',
     'BRACKET_OPEN',
     'BRACKET_CLOSE',
+    'newline',
+    # Terms
     'NUMBER',
     'HEX_NUMBER',
     'IDENTIFIER',
-    'COMPARATOR',
-    'COMMENT',
+    # Builtins
     'INIT_FUNCTION',
     'BUILTIN_ACTION',
     'BUILTIN_FUNCTION',
     'BUILTIN_READONLY',
-    'newline'
-) + tuple(map(lambda s: s.upper(), reserved_words))
+) + tuple(map(lambda s: s.upper(), reserved_words))  # Appends reserved words
 
 t_ADD_OP = r"[+-]"
 t_MUL_OP = r"[*/]"
@@ -46,25 +58,32 @@ t_SEMICOLON = r";"
 t_COMMA = r","
 
 t_EQUAL = r"="
-t_COMPARATOR = r"[!=]=|[><]=?"
+t_COMPARATOR = r"[!=]=|[><]=?"  # Matches ==, !=, <=, >=, <, >
 
 t_INIT_PREFIX = r"\#"
 
+# Functions that can only be called at the start using #
 init_functions = ("width", "height", "background")
 
+# builtin methods returning nothing
 builtin_actions = ("draw",
                    "move",
                    "rotate",
                    "scale",
                    "setColor",
                    "setLineWidth",
-                   "log")
+                   "log",)
 
+# builting methods returning something
 builtin_functions = ("sin",)
 
-builtin_readonlys = ("PI", "x", "y")
+# constants (called readonlys because it may support position in the future)
+builtin_readonlys = ("PI",)
 
-
+# Identifiers may identify the following things:
+# - reserved words (for, if, else, while, ...)
+# - init functions (width, height, ...)
+# - built-in functions, actions, readonlys (sin, draw, pi, ...)
 def t_IDENTIFIER(t):
     r"[A-Za-z_][\w_]*"
     if t.value in reserved_words:
@@ -79,13 +98,13 @@ def t_IDENTIFIER(t):
         t.type = "BUILTIN_READONLY"
     return t
 
-
+# Hex numbers are used to encode colors
 def t_HEX_NUMBER(t):
-    r"0x[0-9A-Fa-f]{6}"
+    r"0x[0-9A-Fa-f]+"
     t.value = int(t.value, 16)
     return t
 
-
+# Support integer and float numbers
 def t_NUMBER(t):
     r"\d+(?:\.\d*)?"
     if '.' in t.value:
@@ -94,16 +113,16 @@ def t_NUMBER(t):
         t.value = int(t.value)
     return t
 
-
+# We use new lines as instruction separator
 def t_newline(t):
     r"\n+"
     t.lexer.lineno += len(t.value)
     return t
 
-
+# No multiline comment support as of yet
 def t_COMMENT(t):
-    r"//.*\n+"
-    t.lexer.lineno += 1
+    r"//.*\n*"
+    t.lexer.lineno += t.value.count("\n")
     pass
 
 
@@ -111,14 +130,14 @@ t_ignore = " \t"
 
 
 def t_error(t):
-    print(f"Illegal character {t.value[0]}")
+    logger.error("Lexical error", t.lineno, f"illegal character '{t.value[0]}'")
     t.lexer.skip(1)
+    sys.exit()
 
 
 lex.lex()
 
 if __name__ == "__main__":
-    import sys
     with open(sys.argv[1]) as file:
         lex.input(file.read())
 

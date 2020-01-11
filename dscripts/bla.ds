@@ -1,0 +1,22 @@
+#width(1920)
+#height(1080)
+#background(0x101010)
+
+// Can define variables using hexadecimal
+color = 0x000000
+
+for(i = 0; i < 10; i = i + 0.01) {
+    for(j = 0; j < 1; j = j + 0.1) {
+        draw()
+        move()
+        
+        log(1)
+
+        color = color + 0x030201 % 0xFFFFFF
+        setColor(color)
+        
+        setLineWidth((i + j) * 0.1)
+        rotate(i * j)
+        scale(1.001)
+    }
+}

@@ -1,0 +1,66 @@
+#width(200)
+#height(200)
+
+value = PI - 1
+
+// Only 1s should be logged
+
+if(value > 5) {
+    log(0)
+} else {
+    log(1)
+}
+
+if(value < 5) {
+    log(1)
+} else {
+    log(0)
+}
+
+if(value <= 5) {
+    log(1)
+} else {
+    log(0)
+}
+
+if (value <= PI - 1) {
+    log(1)
+} else {
+    log(0)
+}
+
+if(value >= 5) {
+    log(0)
+} else {
+    log(1)
+}
+
+if (value >= PI - 1) {
+    log(1)
+} else {
+    log(0)
+}
+
+if(value == PI - 1) {
+    log(1)
+} else {
+    log(0)
+}
+
+if(value == 5) {
+    log(0)
+} else {
+    log(1)
+}
+
+if (value != PI - 1) {
+    log(0)
+} else {
+    log(1)
+}
+
+if (value != 5) {
+    log(1)
+} else {
+    log(0)
+}

@@ -1,0 +1,8 @@
+#width(200)
+#height(200)
+
+log(PI)
+
+var = 10
+
+log(var)

@@ -1,11 +1,12 @@
 import AST
 from AST import addToClass
 from functools import reduce
+from collections import namedtuple
 
 from math import pi, sin, cos
 
 import tkinter as tk
-import sys
+import sys, logger
 
 ###########################################
 # DesSine interpreter
@@ -132,7 +133,7 @@ def method_set_color(arr):
 
 
 def method_log(arr):
-    print("[DesSine Debug] ", *arr)
+    logger.debug(arr)
 
 
 def method_sin(arr):
@@ -142,19 +143,19 @@ def method_sin(arr):
 def method_set_line_width(arr):
     globals["lineWidth"] = arr[0]
 
-
-methods = {
-    'width': method_width,
-    'height': method_height,
-    'background': method_background,
-    'draw': method_draw,
-    'move': method_move,
-    'rotate': method_rotate,
-    'scale': method_scale,
-    'setColor': method_set_color,
-    'log': method_log,
-    'sin': method_sin,
-    'setLineWidth': method_set_line_width,
+Function = namedtuple("Function", ["method", "arity"])
+built_ins = {
+    'width': Function(method_width, 1),
+    'height': Function(method_height, 1),
+    'background': Function(method_background, 1),
+    'draw': Function(method_draw, 0),
+    'move': Function(method_move, 0),
+    'rotate': Function(method_rotate, 1),
+    'scale': Function(method_scale, 1),
+    'setColor': Function(method_set_color, 1),
+    'log': Function(method_log, -1),
+    'sin': Function(method_sin, 1),
+    'setLineWidth': Function(method_set_line_width, 1),
 }
 
 constants = {
@@ -265,7 +266,10 @@ def execute(self):
 @addToClass(AST.FunctionNode)
 def execute(self):
     args = [c.execute() for c in self.children]
-    return methods[self.action](args)
+    func = built_ins[self.action]
+    if len(args) == func.arity or func.arity == -1:
+        return func.method(args)
+    logger.error("Semantic error", self.lineno, f"Bad number of arguments in {self.action} call.")
 
 
 if __name__ == "__main__":

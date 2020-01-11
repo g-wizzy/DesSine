@@ -116,8 +116,8 @@ def method_draw(arr):
 
     # Draw circles at endpoints to avoid disjointed segments
     if lw > 3:
-    globals["canvas"].create_oval(
-        x - lw / 2, y - lw / 2, x + lw / 2, y + lw / 2, fill=color, width=0)
+        globals["canvas"].create_oval(
+            x - lw / 2, y - lw / 2, x + lw / 2, y + lw / 2, fill=color, width=0)
         globals["canvas"].create_oval(
             x + dx - lw / 2, y + dy - lw / 2, x + dx + lw / 2, y + dy + lw / 2, fill=color, width=0)
 
@@ -303,7 +303,13 @@ def execute(self):
 
 @addToClass(AST.AssignNode)
 def execute(self):
-    scopes[-1][self.children[0].tok] = self.children[1].execute()
+    identifier = self.children[0].tok
+    value = self.children[1].execute()
+    for scope in scopes[-1::-1]:
+        if identifier in scope.keys():
+            scope[identifier] = value
+            return
+    scopes[-1][identifier] = value
 
 
 @addToClass(AST.WhileNode)

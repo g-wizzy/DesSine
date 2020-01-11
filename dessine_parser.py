@@ -52,6 +52,16 @@ def p_reduce_right_body(p):
     '''body : body newline'''
     p[0] = p[1]
 
+# Changes scope
+def p_block(p):
+    '''block : BRACKET_OPEN body BRACKET_CLOSE'''
+    p[0] = AST.BlockNode(p.lineno(2), [p[2]])
+
+# We do not want syntaxic errors on empty blocks, even though they have no reason to exist
+def p_empty_block(p):
+    '''block : BRACKET_OPEN empty BRACKET_CLOSE'''
+    p[0] = AST.BlockNode(p.lineno(1), [])
+
 # Syntaxic sugar allowing us to use "empty" instead of not writing anything
 def p_empty(p):
     'empty :'

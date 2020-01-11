@@ -38,3 +38,12 @@ def info(prefix, message):
         message: Message to display
     """
     print(f"{bcolors.OKGREEN}[{prefix}] {bcolors.ENDC}{message}")
+
+def debug(variables):
+    """
+    Prints the content of the given variables
+
+    Args:
+        variables: array of printable objects
+    """
+    print(f"{bcolors.OKBLUE}[DesSine Debug] {bcolors.ENDC}{', '.join(map(lambda var: str(var), variables))}")

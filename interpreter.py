@@ -224,6 +224,7 @@ def execute(self):
     for c in self.children:
         c.execute()
 
+    # Create tkinter instance, canvas et set width/height
     master = tk.Tk()
 
     w = globals["width"]
@@ -234,11 +235,13 @@ def execute(self):
     master.geometry(f"{w}x{h}")
     globals["canvas"].config(bg=to_hex_color(globals["background"]))
 
+    # Starting point is at the center of the screen
     globals["position"] = (w / 2, h / 2)
 
 
 @addToClass(AST.BlockNode)
 def execute(self):
+    # Scope is a list, with push/pop it when we change scope
     scopes.append({})
     for c in self.children:
         c.execute()
@@ -247,38 +250,54 @@ def execute(self):
 
 @addToClass(AST.RoutineDefinitionNode)
 def execute(self):
+    # Defining routines
     routines[self.name] = Routine(self.params, self.block)
 
 
 @addToClass(AST.RoutineCallNode)
 def execute(self):
+    # Check routine validity before callling them
+    # Name
     if self.name not in routines.keys():
-        logger.error("Semantic error", self.lineno, f"No function with name {self.name} exists.")
+        logger.error("Semantic error", self.lineno, f"No function with name '{self.name}' exists.")
         sys.exit(-1)
+    
     routine = routines[self.name]
+    
+    # Args length
     if len(routine.params) != len(self.children):
-        logger.error("Semantic error", self.lineno, f"Bad number of arguments in {self.name} call.")
+        logger.error("Semantic error", self.lineno, f"Bad number of arguments in '{self.name}' call.")
         sys.exit(-1)
+
+    # Execute parameters
     args = [c.execute() for c in self.children]
+
+    # New scope for the function
     scopes.append({})
+
+    # Set parameters values in the function scope (parameters are converted to "variables")
     for param, value in zip(routine.params, args):
         scopes[-1][param] = value
     
     routine.blockNode.execute()
 
+    # Exit function scope
     scopes.pop()
 
 
 @addToClass(AST.TokenNode)
 def execute(self):
     if isinstance(self.tok, str):
+        # Is the token a constant?
         if self.tok in constants:
             return constants[self.tok]
 
+        # We can access variables from parent scopes so we have to check each scope to find
+        # if a variable is defined or not
         for scope in scopes[-1::-1]:
             if self.tok in scope.keys():
                 return scope[self.tok]
-        logger.error("Semantic error", self.lineno, f"Variable {self.tok} is not defined.")
+        logger.error("Semantic error", self.lineno, f"Variable '{self.tok}' is not defined.")
         sys.exit(-1)
 
     return self.tok
@@ -287,11 +306,16 @@ def execute(self):
 @addToClass(AST.OpNode)
 def execute(self):
     args = [c.execute() for c in self.children]
+
+    # Handle unary operator
     if len(args) == 1:
         args.insert(0, 0)
+
+    # Prevent dividing by 0
     if self.op == '/' and args[1] == 0:
         logger.error("Semantic error", self.lineno, "Division by zero.")
         sys.exit(-1)
+
     return reduce(operators[self.op], args)
 
 
@@ -305,10 +329,15 @@ def execute(self):
 def execute(self):
     identifier = self.children[0].tok
     value = self.children[1].execute()
+
+    # When assigning a variable, we need to check if it does not exists in a parent scope
+    # If it does, we change it in the parent scope
     for scope in scopes[-1::-1]:
         if identifier in scope.keys():
             scope[identifier] = value
             return
+
+    # If it does not exists, we declare it in the current scope
     scopes[-1][identifier] = value
 
 
@@ -328,14 +357,18 @@ def execute(self):
 def execute(self):
     args = [c.execute() for c in self.children]
     func = built_ins[self.action]
+
+    # Check valid number of args
     if len(args) == func.arity or func.arity == -1:
         return func.method(args)
+
     logger.error("Semantic error", self.lineno, f"Bad number of arguments in {self.action} call.")
     sys.exit(-1)
 
 
 @addToClass(AST.IfNode)
 def execute(self):
+    # if "or" if ... else
     if self.children[0].execute():
         self.children[1].execute()
     elif len(self.children) > 2:
@@ -344,13 +377,13 @@ def execute(self):
 
 @addToClass(AST.ForNode)
 def execute(self):
-    # init
+    # Init
     self.children[0].execute()
-    # condition
+    # Condition
     while self.children[1].execute():
-        # body
+        # Body
         self.children[3].execute()
-        # increment
+        # Increment
         self.children[2].execute()
 
 
@@ -358,9 +391,11 @@ def execute(self):
 def execute(self):
     args = [c.execute() for c in self.children]
     func = built_ins[self.action]
+
+    # Check valid number of args
     if len(args) == func.arity or func.arity == -1:
         return func.method(args)
-    logger.error("Semantic error", self.lineno, f"Bad number of arguments in {self.action} call.")
+    logger.error("Semantic error", self.lineno, f"Bad number of arguments in '{self.action}' call.")
     sys.exit(-1)
 
 

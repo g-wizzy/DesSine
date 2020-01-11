@@ -12,7 +12,8 @@ reserved_words = (
     'while',
     'for',
     'if',
-    'else'
+    'else',
+    'function',
 )
 
 tokens = (

@@ -111,6 +111,27 @@ class InitNode(Node):
         return self.action
 
 
+class RoutineDefinitionNode(Node):
+    type = 'Routine Definition'
+
+    def __init__(self, lineno, name, params, block):
+        Node.__init__(self, lineno)
+        self.name = name
+        self.params = list(map(lambda tokenNode: tokenNode.tok, params))
+        self.block = block
+    
+    def __repr__(self):
+        return f"{self.name}({self.params})"
+
+
+class RoutineCallNode(Node):
+    type = 'Routine Call'
+
+    def __init__(self, lineno, name, params):
+        Node.__init__(self, lineno, params)
+        self.name = name
+
+
 class ComparisonNode(Node):
     """
     Node that will yields true / false when evaluated

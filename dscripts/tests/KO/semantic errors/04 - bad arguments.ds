@@ -1,0 +1,38 @@
+// Init functions
+
+#width(50)
+#height(50)
+// #background()
+// #background(1,2)
+
+
+// Built-ins
+
+// move(1)
+// draw(1,2)
+// var = sin()
+// setColor(255,255,255)
+
+
+// User-defined functions
+
+function zero_ary() {}
+function unary(a) {}
+function binary(a,b) {}
+function n_ary(a,b,c,d) {}
+
+// Comment out a bad function call to test it
+
+// zero_ary(1)
+
+// unary()
+// unary(1,2)
+
+// binary()
+// binary(1)
+// binary(1,2,3)
+
+// n_ary()
+// n_ary(1)
+// n_ary(1,2,3)
+// n_ary(1,2,3,4,5)

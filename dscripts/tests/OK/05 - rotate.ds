@@ -1,0 +1,8 @@
+#width(200)
+#height(200)
+
+scale(75)
+draw()
+
+rotate(PI / 2)
+draw()

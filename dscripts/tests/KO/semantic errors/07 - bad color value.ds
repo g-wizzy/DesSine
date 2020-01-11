@@ -1,0 +1,11 @@
+#width(50)
+#height(50)
+
+floats_actually_work = 0xFFFFFF / 2
+setColor(floats_actually_work)
+
+too_big = 0xFFFFFF + 1
+setColor(too_big)
+
+too_small = -1
+setColor(too_small)

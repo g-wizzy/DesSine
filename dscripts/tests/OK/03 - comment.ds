@@ -1,0 +1,10 @@
+// before init
+
+#width(200)
+#height(200)
+
+// after init
+
+log(0)
+
+// after body

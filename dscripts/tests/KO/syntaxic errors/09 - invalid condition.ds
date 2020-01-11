@@ -1,0 +1,10 @@
+#width(50)
+#height(50)
+
+// if, for and while only accept comparisons in their condition
+
+if (1) {
+    log(1)
+} else {
+    log(0)
+}

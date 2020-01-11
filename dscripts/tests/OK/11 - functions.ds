@@ -1,0 +1,29 @@
+#width(200)
+#height(200)
+
+// 0-ary function
+function test0() {
+    log(0)
+}
+
+// Unary function
+function test1(arg) {
+    log(arg)
+}
+
+// Binary function
+function test2(a, b) {
+    log(a, b, a+b)
+}
+
+// N-ary function
+function test3(a, b, c, d, e, f, g, h) {
+    test2(a,b)
+    test2(a,c)
+    log(d,e,f,g,h)
+}
+
+test0()
+test1(1)
+test2(2,3)
+test3(1, 2, 3, 4, 5, 6, 7, 8)

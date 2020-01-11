@@ -140,8 +140,8 @@ def method_rotate(arr):
     angle = arr[0]
     x, y = globals["vector"]
 
-    globals["vector"] = (cos(angle) * x - sin(angle) * y,
-                         sin(angle) * x + cos(angle) * y)
+    globals["vector"] = (cos(angle) * x + sin(angle) * y,
+                         - sin(angle) * x + cos(angle) * y)
 
 
 def method_scale(arr):

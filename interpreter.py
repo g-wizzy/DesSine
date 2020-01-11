@@ -47,11 +47,18 @@ globals = {
 }
 
 def check_init_block():
+    """
+    Checks if the dimensions have been set during the initialization.
+    """
     if globals["width"] * globals["height"] == 0:
         logger.error("Semantic error", "0", "Missing dimension initialization")
         sys.exit(-1)
 
+
 def to_hex_color(color):
+    """
+    Formats the given color (integer between 0 and 0xFFFFFF) into TKinter compliant string
+    """
     try:
         return "#" + hex(int(color))[2:].ljust(6, '0')
     except:
@@ -59,6 +66,9 @@ def to_hex_color(color):
 
 
 def method_width(arr):
+    """
+    Init function that sets the width of the window
+    """
     width = arr[0]
     if width <= 0:
         logger.error("Semantic error", "0 (init block)", f"Cannot set width to non-positive value {width}")
@@ -68,6 +78,9 @@ def method_width(arr):
 
 
 def method_height(arr):
+    """
+    Init function that sets the height of the window
+    """
     height = arr[0]
     if height <= 0:
         logger.error("Semantic error", "0 (init block)", f"Cannot set height to non-positive value {height}")
@@ -77,6 +90,9 @@ def method_height(arr):
 
 
 def method_background(arr):
+    """
+    Init function that sets the background color of the window
+    """
     color = arr[0]
     if 0 <= color <= 0xFFFFFF:
         globals["background"] = arr[0]
@@ -85,8 +101,10 @@ def method_background(arr):
         sys.exit(-1)
 
 
-
 def method_draw(arr):
+    """
+    Draws a line between the current position along the current vector (but does not move the current point)
+    """
     x, y = globals["position"]
     dx, dy = globals["vector"]
     lw = globals["lineWidth"]
@@ -104,11 +122,17 @@ def method_draw(arr):
 
 
 def method_move(arr):
+    """
+    Move the current point along the current vector
+    """
     globals["position"] = tuple(
         [globals["position"][i] + globals["vector"][i] for i in [0, 1]])
 
 
 def method_rotate(arr):
+    """
+    Rotate the current vector
+    """
     angle = arr[0]
     x, y = globals["vector"]
 
@@ -117,6 +141,9 @@ def method_rotate(arr):
 
 
 def method_scale(arr):
+    """
+    Scale the current vector
+    """
     globals["vector"] = tuple(map(lambda x: arr[0] * x, globals["vector"]))
     if not method_scale.already_warned_length_zero and globals["vector"][0] == 0 and globals["vector"][1] == 0:
         logger.warning("Runtime warning", f"The vector has reached length 0 after drawing {globals['line_count']} lines.")
@@ -124,7 +151,11 @@ def method_scale(arr):
 
 method_scale.already_warned_length_zero = False
 
+
 def method_set_color(arr):
+    """
+    Set the color of the lines
+    """
     color = arr[0]
     if 0 <= color <= 0xFFFFFF:
         globals["color"] = color
@@ -133,14 +164,23 @@ def method_set_color(arr):
 
 
 def method_log(arr):
+    """
+    Log the given variables
+    """
     logger.debug(arr)
 
 
 def method_sin(arr):
+    """
+    Sinus, accepts radians
+    """
     return sin(arr[0])
 
 
 def method_set_line_width(arr):
+    """
+    Set the line's width in pixels
+    """
     globals["lineWidth"] = arr[0]
 
 Function = namedtuple("Function", ["method", "arity"])

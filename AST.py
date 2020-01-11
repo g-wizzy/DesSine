@@ -9,14 +9,16 @@ import pydot
 
 class Node:
     """
-    Same as the file used in all the course's exercises
+    Same as the file used in all the course's exercises,
+    with the added field of the line number
     """
     count = 0
     type = 'Node (unspecified)'
     shape = 'ellipse'
 
-    def __init__(self, children=None):
+    def __init__(self, lineno, children=None):
         self.ID = str(Node.count)
+        self.lineno = lineno
 
         Node.count += 1
 
@@ -82,6 +84,11 @@ class BodyNode(Node):
     """
     type = 'Body'
 
+class BlockNode(Node):
+    """
+    Node representing a body surrounded by brackets, changes scope
+    """
+    type = 'Block'
 
 class InitBlockNode(Node):
     """
@@ -96,8 +103,8 @@ class InitNode(Node):
     """
     type = "Init"
 
-    def __init__(self, action, children):
-        Node.__init__(self, children)
+    def __init__(self, lineno, action, children):
+        Node.__init__(self, lineno, children)
         self.action = action
 
     def __repr__(self):
@@ -110,8 +117,8 @@ class ComparisonNode(Node):
     """
     type = 'Comparison'
 
-    def __init__(self, operator, children):
-        Node.__init__(self, children)
+    def __init__(self, lineno, operator, children):
+        Node.__init__(self, lineno, children)
         self.operator = operator
 
     def __repr__(self):
@@ -121,8 +128,8 @@ class ComparisonNode(Node):
 class TokenNode(Node):
     type = 'token'
 
-    def __init__(self, tok):
-        Node.__init__(self)
+    def __init__(self, lineno, tok):
+        Node.__init__(self, lineno)
         self.tok = tok
         self.assign = False
 
@@ -131,8 +138,8 @@ class TokenNode(Node):
 
 
 class OpNode(Node):
-    def __init__(self, op, children):
-        Node.__init__(self, children)
+    def __init__(self, lineno, op, children):
+        Node.__init__(self, lineno, children)
         self.op = op
         try:
             self.nbargs = len(children)
@@ -162,8 +169,8 @@ class ForNode(Node):
 class FunctionNode(Node):
     type = 'Function'
 
-    def __init__(self, action, arguments):
-        Node.__init__(self, arguments)
+    def __init__(self, lineno, action, arguments):
+        Node.__init__(self, lineno, arguments)
         self.action = action
 
     def __repr__(self):
@@ -173,8 +180,8 @@ class FunctionNode(Node):
 class EntryNode(Node):
     type = 'ENTRY'
 
-    def __init__(self):
-        Node.__init__(self, None)
+    def __init__(self, lineno):
+        Node.__init__(self, lineno, None)
 
 
 def addToClass(cls):

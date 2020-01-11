@@ -121,7 +121,7 @@ def t_newline(t):
 
 # No multiline comment support as of yet
 def t_COMMENT(t):
-    r"//.*\n+"
+    r"//.*\n*"
     t.lexer.lineno += t.value.count("\n")
     pass
 

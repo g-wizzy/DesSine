@@ -108,7 +108,11 @@ def method_scale(arr):
 method_scale.already_warned_length_zero = False
 
 def method_set_color(arr):
-    globals["color"] = arr[0]
+    color = arr[0]
+    if 0 <= color <= 0xFFFFFF:
+        globals["color"] = arr[0]
+    else:
+        logger.warning("Runtime warning", f"Cannot set color to 0x{color:06x}. Color is unchanged.")
 
 
 def method_log(arr):

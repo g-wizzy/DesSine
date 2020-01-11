@@ -242,6 +242,7 @@ def execute(self):
     scopes.append({})
     for c in self.children:
         c.execute()
+    scopes.pop()
 
 
 @addToClass(AST.RoutineDefinitionNode)
@@ -261,6 +262,8 @@ def execute(self):
         scopes[-1][param] = value
     
     routine.blockNode.execute()
+
+    scopes.pop()
 
 
 @addToClass(AST.TokenNode)

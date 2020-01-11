@@ -66,7 +66,13 @@ def method_height(arr):
 
 
 def method_background(arr):
-    globals["background"] = arr[0]
+    color = arr[0]
+    if 0 <= color <= 0xFFFFFF:
+        globals["background"] = arr[0]
+    else:
+        logger.error("Semantic error", "0 (init block)", f"Could not set color to 0x{color:06x} because it is out of bounds. Exiting.")
+        sys.exit(-1)
+
 
 
 def method_draw(arr):
@@ -110,7 +116,7 @@ method_scale.already_warned_length_zero = False
 def method_set_color(arr):
     color = arr[0]
     if 0 <= color <= 0xFFFFFF:
-        globals["color"] = arr[0]
+        globals["color"] = color
     else:
         logger.warning("Runtime warning", f"Cannot set color to 0x{color:06x}. Color is unchanged.")
 

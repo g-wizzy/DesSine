@@ -19,6 +19,16 @@ def error(prefix, line, message):
     """
     print(f"{bcolors.FAIL}[{prefix}] {bcolors.ENDC}{bcolors.BOLD}Line {line}{bcolors.ENDC} : {message}")
 
+def warning(prefix, message):
+    """
+    Prints the message with specific format for warning
+
+    Args:
+        prefix: Will prefix the log entry
+        message: Message to display
+    """
+    print(f"{bcolors.WARNING}[{prefix}] {bcolors.ENDC}{message}")
+
 def info(prefix, message):
     """
     Prints the message with specific format for information

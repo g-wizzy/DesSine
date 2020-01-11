@@ -101,7 +101,11 @@ def method_rotate(arr):
 
 def method_scale(arr):
     globals["vector"] = tuple(map(lambda x: arr[0] * x, globals["vector"]))
+    if not method_scale.already_warned_length_zero and globals["vector"][0] == 0 and globals["vector"][1] == 0:
+        logger.warning("Runtime warning", f"The vector has reached length 0 after drawing {globals['line_count']} lines.")
+        method_scale.already_warned_length_zero = True
 
+method_scale.already_warned_length_zero = False
 
 def method_set_color(arr):
     globals["color"] = arr[0]

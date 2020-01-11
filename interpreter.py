@@ -252,6 +252,9 @@ def execute(self):
 
 @addToClass(AST.RoutineCallNode)
 def execute(self):
+    if self.name not in routines.keys():
+        logger.error("Semantic error", self.lineno, f"No function with name {self.name} exists.")
+        sys.exit(-1)
     routine = routines[self.name]
     if len(routine.params) != len(self.children):
         logger.error("Semantic error", self.lineno, f"Bad number of arguments in {self.name} call.")
@@ -352,6 +355,7 @@ def execute(self):
     if len(args) == func.arity or func.arity == -1:
         return func.method(args)
     logger.error("Semantic error", self.lineno, f"Bad number of arguments in {self.action} call.")
+    sys.exit(-1)
 
 
 if __name__ == "__main__":

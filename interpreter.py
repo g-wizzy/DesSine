@@ -58,11 +58,21 @@ def to_hex_color(color):
 
 
 def method_width(arr):
-    globals["width"] = arr[0]
+    width = arr[0]
+    if width <= 0:
+        logger.error("Semantic error", "0 (init block)", f"Cannot set width to non-positive value {width}")
+        sys.exit(-1)
+
+    globals["width"] = width
 
 
 def method_height(arr):
-    globals["height"] = arr[0]
+    height = arr[0]
+    if height <= 0:
+        logger.error("Semantic error", "0 (init block)", f"Cannot set height to non-positive value {height}")
+        sys.exit(-1)
+
+    globals["height"] = height
 
 
 def method_background(arr):

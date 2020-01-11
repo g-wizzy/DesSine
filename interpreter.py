@@ -115,10 +115,11 @@ def method_draw(arr):
     globals["canvas"].create_line(x, y, x+dx, y+dy, fill=color, width=lw)
 
     # Draw circles at endpoints to avoid disjointed segments
+    if lw > 3:
     globals["canvas"].create_oval(
         x - lw / 2, y - lw / 2, x + lw / 2, y + lw / 2, fill=color, width=0)
-    # globals["canvas"].create_oval(
-    #     x + dx - lw / 2, y + dy - lw / 2, lw, lw, fill=color, width=0)
+        globals["canvas"].create_oval(
+            x + dx - lw / 2, y + dy - lw / 2, x + dx + lw / 2, y + dy + lw / 2, fill=color, width=0)
 
     globals["line_count"] += 1
     globals["canvas"].pack()

@@ -251,6 +251,9 @@ def execute(self):
     args = [c.execute() for c in self.children]
     if len(args) == 1:
         args.insert(0, 0)
+    if self.op == '/' and args[1] == 0:
+        logger.error("Semantic error", self.lineno, "Division by zero.")
+        sys.exit(-1)
     return reduce(operators[self.op], args)
 
 

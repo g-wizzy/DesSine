@@ -31,7 +31,10 @@ comparators = {
     '!=': lambda x, y: x != y,
 }
 
-vars = {}
+scopes = [{}]
+Routine = namedtuple("Routine", ["params", "blockNode"])
+routines = {}
+
 default_width = 480
 default_height = 360
 globals = {
@@ -233,16 +236,44 @@ def execute(self):
     globals["position"] = (w / 2, h / 2)
 
 
+@addToClass(AST.BlockNode)
+def execute(self):
+    scopes.append({})
+    for c in self.children:
+        c.execute()
+
+
+@addToClass(AST.RoutineDefinitionNode)
+def execute(self):
+    routines[self.name] = Routine(self.params, self.block)
+
+
+@addToClass(AST.RoutineCallNode)
+def execute(self):
+    routine = routines[self.name]
+    if len(routine.params) != len(self.children):
+        logger.error("Semantic error", self.lineno, f"Bad number of arguments in {self.name} call.")
+        sys.exit(-1)
+    args = [c.execute() for c in self.children]
+    scopes.append({})
+    for param, value in zip(routine.params, args):
+        scopes[-1][param] = value
+    
+    routine.blockNode.execute()
+
+
 @addToClass(AST.TokenNode)
 def execute(self):
     if isinstance(self.tok, str):
-        try:
-            return vars[self.tok]
-        except KeyError:
-            try:
-                return constants[self.tok]
-            except KeyError:
-                print(f"*** Error: variable {self.tok} undefined !")
+        if self.tok in constants:
+            return constants[self.tok]
+
+        for scope in scopes[-1::-1]:
+            if self.tok in scope.keys():
+                return scope[self.tok]
+        logger.error("Semantic error", self.lineno, f"Variable {self.tok} is not defined.")
+        sys.exit(-1)
+
     return self.tok
 
 
@@ -265,7 +296,7 @@ def execute(self):
 
 @addToClass(AST.AssignNode)
 def execute(self):
-    vars[self.children[0].tok] = self.children[1].execute()
+    scopes[-1][self.children[0].tok] = self.children[1].execute()
 
 
 @addToClass(AST.WhileNode)
@@ -283,7 +314,11 @@ def execute(self):
 @addToClass(AST.InitNode)
 def execute(self):
     args = [c.execute() for c in self.children]
-    methods[self.action](args)
+    func = built_ins[self.action]
+    if len(args) == func.arity or func.arity == -1:
+        return func.method(args)
+    logger.error("Semantic error", self.lineno, f"Bad number of arguments in {self.action} call.")
+    sys.exit(-1)
 
 
 @addToClass(AST.IfNode)
@@ -317,7 +352,6 @@ def execute(self):
 
 if __name__ == "__main__":
     from dessine_parser import parse
-    import logger
     prog = open(sys.argv[1]).read()
     ast = parse(prog)
 

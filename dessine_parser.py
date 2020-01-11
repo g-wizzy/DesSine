@@ -190,10 +190,10 @@ def p_expression_paren(p):
 # The parser exits whenever it encounters an error
 def p_error(p):
     try:
-        logger.error("Parser error", p.lineno, f"Unexpected token '{p.value}'")
+        logger.error("Syntax error", p.lineno, f"Unexpected token '{p.value}'")
     except:
         # p is None => end of file reached
-        logger.error("Parser error", "EOF", "Couldn't parse program, check for missing bracket / parenthesis")
+        logger.error("Syntax error", "EOF", "Couldn't parse program, check for missing bracket / parenthesis")
     
     sys.exit(-1)
 

@@ -33,6 +33,16 @@ def p_init(p):
     p[0] = AST.InitNode(p[2], p[4])
 
 
+def p_routine_definition(p):
+    '''routine_definition : FUNCTION IDENTIFIER PARENTHESIS_OPEN parameters PARENTHESIS_CLOSE block'''
+    p[0] = AST.RoutineDefinitionNode(p.lineno(2), p[2], p[4], p[6])
+
+
+def p_routine_call(p):
+    '''routine_call : IDENTIFIER PARENTHESIS_OPEN parameters PARENTHESIS_CLOSE'''
+    p[0] = AST.RoutineCallNode(p.lineno(1), p[1], p[3])
+
+
 def p_body(p):
     '''body : statement
         | body newline statement'''

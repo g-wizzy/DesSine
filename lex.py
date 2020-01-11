@@ -25,7 +25,7 @@ tokens = (
     'COMPARATOR',
     # Delimiters
     'INIT_PREFIX',
-    'COMMENT',
+    #'COMMENT',
     'SEMICOLON',
     'COMMA',
     'PARENTHESIS_OPEN',

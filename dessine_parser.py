@@ -167,6 +167,8 @@ def p_expression_function(p):
 precedence = (
     ('left', 'ADD_OP'),
     ('left', 'MUL_OP'),
+    ('left', 'MOD_OP'),
+    ('left', 'newline'),
     ('right', 'UN_OP')
 )
 

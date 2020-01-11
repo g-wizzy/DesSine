@@ -11,7 +11,7 @@ import sys, logger
 ###########################################
 # DesSine interpreter
 # Made by Pierre Bürki and Loïck Jeanneret
-# Last updated on 10.01.20
+# Last updated on 11.01.20
 ###########################################
 
 operators = {

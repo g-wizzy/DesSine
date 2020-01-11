@@ -1,3 +1,9 @@
+###########################################
+# DesSine logger
+# Made by Pierre Bürki and Loïck Jeanneret
+# Last updated on 11.01.20
+###########################################
+
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'

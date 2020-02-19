@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Out</title>
+    <style>
+        * {
+            background-color: white;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <script src="./drawing.js"></script>
+    <canvas width="1900" height="1080" id="c"></canvas>
+    <script>
+        const canvas = document.getElementById("c");
+        const ctx = canvas.getContext("2d");
+
+        function l(x, y) {
+            ctx.lineTo(x, y);
+        }
+
+        function m(x, y) {
+            ctx.moveTo(x, y);
+        }
+
+        ctx.beginPath();
+        
+        renderLines(ctx, canvas);
+        
+        ctx.stroke();
+    </script>
+</body>
+</html>

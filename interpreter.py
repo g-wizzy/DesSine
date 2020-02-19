@@ -14,6 +14,7 @@ import sys, logger
 # Last updated on 11.01.20
 ###########################################
 
+jsLines = []
 operators = {
     '+': lambda x, y: x + y,
     '-': lambda x, y: x - y,
@@ -124,6 +125,8 @@ def method_draw(arr):
     globals["line_count"] += 1
     globals["canvas"].pack()
 
+    jsLines.append(f"l({x + dx}, {y + dy})")
+    jsLines.append(f"m({x}, {y})")
 
 def method_move(arr):
     """
@@ -166,6 +169,13 @@ def method_set_color(arr):
     else:
         logger.warning("Runtime warning", f"Cannot set color to 0x{color:06x}. Color is unchanged.")
 
+    x, y = globals["position"]
+    dx, dy = globals["vector"]
+
+    jsLines.append(f"x.strokeStyle = \"{to_hex_color(globals['color'])}\"")
+    jsLines.append(f"x.stroke()")
+    jsLines.append(f"x.beginPath()")
+    jsLines.append(f"m({x}, {y})")
 
 def method_log(arr):
     """
@@ -407,8 +417,18 @@ if __name__ == "__main__":
     ast.init()
     check_init_block()
     ast.execute()
-
+    
     # Display the result
-    logger.info("DesSine", f"Starting render of {globals['line_count']} lines.")
 
-    tk.mainloop()
+    if len(sys.argv) > 2:
+        with open('drawing.js', 'w') as f:
+            f.write("function renderLines(x, canvas) {\n")
+            for item in jsLines:
+                f.write("%s\n" % item)
+            f.write("\n}")
+        logger.info("DesSine", f"Wrote {globals['line_count']} lines to drawing.js")
+    else:
+        logger.info("DesSine", f"Starting render of {globals['line_count']} lines.")
+        tk.mainloop()
+
+

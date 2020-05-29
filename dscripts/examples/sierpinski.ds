@@ -1,0 +1,37 @@
+#width(1000)
+#height(1000)
+
+function step(depth) {
+	if (depth > 0) {
+		scale(1 / 2)
+
+		rotate(-(1 - 2 * (depth % 2)) * PI / 3)
+		step(depth - 1)
+		rotate((1 - 2 * (depth % 2)) * - 2 * PI / 3)
+		step(depth - 1)
+		rotate(-(1 - 2 * (depth % 2)) * 2 * PI / 3)
+		step(depth - 1)
+		rotate((1 - 2 * (depth % 2)) * - 2 * PI / 3)
+		step(depth - 1)
+		rotate(-(1 - 2 * (depth % 2)) * PI / 3)
+	
+		scale(2)
+	} else {
+		draw()
+		move()
+	}
+}
+
+// setup
+scale(200)
+rotate(PI / 2)
+move()
+scale(3)
+rotate(5 * PI / 6)
+
+setLineWidth(2)
+
+for (i = 0; i < 3; i = i + 1) {
+	step(5)
+	rotate(2 * PI / 3)
+}
